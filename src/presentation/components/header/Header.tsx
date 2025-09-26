@@ -11,7 +11,7 @@ export function Header({ title }: HeaderProps) {
   return (
     <View style={styles.container}>
       <TouchableOpacity>
-        <Menu color="#333" size={28} />
+        <Menu color="#F4781F" size={28} />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
       <View style={{ width: 28 }} />

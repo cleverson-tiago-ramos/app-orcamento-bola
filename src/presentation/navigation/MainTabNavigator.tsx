@@ -17,8 +17,8 @@ import { FinanceiroScreen } from "@/presentation/screens/financeiro/FinanceiroSc
 const Tab = createBottomTabNavigator();
 
 export function MainTabNavigator() {
-  const activeColor = "#0A84FF"; // Azul para ícone ativo
-  const inactiveColor = "#8A8A8E"; // Cinza para ícone inativo
+  const activeColor = "#F4781F"; // Azul para ícone ativo
+  const inactiveColor = "#4A4A4A"; // Cinza para ícone inativo
 
   return (
     <Tab.Navigator
