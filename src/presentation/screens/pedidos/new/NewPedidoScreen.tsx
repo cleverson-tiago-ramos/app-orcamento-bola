@@ -6,7 +6,7 @@ import { TextInput, Button } from "react-native-paper";
 import { Header } from "@/presentation/components/header/Header";
 import { styles } from "./styles";
 
-export function NovoPedidoScreen() {
+export function NewPedidoScreen() {
   const [clienteNome, setClienteNome] = useState("");
   const [valorTotal, setValorTotal] = useState("");
   const [descricao, setDescricao] = useState("");
