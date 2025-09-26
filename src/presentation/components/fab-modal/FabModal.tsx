@@ -46,21 +46,21 @@ export function FabModal({ isVisible, onClose }: FabModalProps) {
               style={styles.cardButton}
               onPress={() => handleOptionPress("NovoServico")}
             >
-              <BriefcaseBusiness size={32} color="#FF3B30" />
+              <BriefcaseBusiness size={32} color="#F4781F" />
               <Text style={styles.cardButtonText}>Serviço</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.cardButton}
               onPress={() => handleOptionPress("NovoVenda")}
             >
-              <ShoppingCart size={32} color="#FF3B30" />
+              <ShoppingCart size={32} color="#F4781F" />
               <Text style={styles.cardButtonText}>Venda</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.cardButton}
               onPress={() => handleOptionPress("PDVRapida")}
             >
-              <ReceiptText size={32} color="#FF3B30" />
+              <ReceiptText size={32} color="#F4781F" />
               <Text style={styles.cardButtonText}>PDV</Text>
               <Text style={styles.cardButtonSubText}>Venda Rápida</Text>
             </TouchableOpacity>

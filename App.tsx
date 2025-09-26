@@ -5,6 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { MainTabNavigator } from "./src/presentation/navigation/MainTabNavigator";
 import * as SplashScreen from "expo-splash-screen";
 import { View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // Mantém a splash screen nativa visível
 SplashScreen.preventAutoHideAsync();
@@ -43,10 +44,14 @@ export default function App() {
 
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <NavigationContainer>
-        <StatusBar style="auto" />
-        <MainTabNavigator />
-      </NavigationContainer>
+      <SafeAreaProvider>
+        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+          <NavigationContainer>
+            <StatusBar style="auto" />
+            <MainTabNavigator />
+          </NavigationContainer>
+        </View>
+      </SafeAreaProvider>
     </View>
   );
 }
