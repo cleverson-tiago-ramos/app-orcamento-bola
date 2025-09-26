@@ -1,6 +1,5 @@
-//src/presentation/screens/pedidos/PedidosScreen.tsx
 import React from "react";
-import { View, FlatList, ActivityIndicator, Text } from "react-native";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Hook com a lógica
@@ -14,9 +13,9 @@ import { SearchBar } from "@/presentation/components/search-bar/SearchBar";
 import { TabFilter } from "@/presentation/components/tab-filter/TabFilter";
 import { EmptyState } from "@/presentation/components/empty-state/EmptyState";
 import { Fab } from "@/presentation/components/fab/Fab";
+import { PedidoCard } from "@/presentation/components/pedido-card/PedidoCard"; // <-- Importe o Card
 
 export function PedidosScreen() {
-  // Pegamos toda a lógica e os dados do nosso hook
   const { activeTab, pedidos, loading, handleTabPress, handleFabPress } =
     usePedidos();
 
@@ -27,12 +26,14 @@ export function PedidosScreen() {
     if (pedidos.length === 0) {
       return <EmptyState />;
     }
-    // Futuramente, aqui renderizaremos a FlatList com os pedidos
+
     return (
       <FlatList
         data={pedidos}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <Text>{item.clienteNome}</Text>}
+        // 👇 A MUDANÇA É AQUI. TROQUE O <Text> PELO <PedidoCard />
+        renderItem={({ item }) => <PedidoCard item={item} />}
+        contentContainerStyle={{ paddingTop: 12 }} // Adiciona um espaço no topo da lista
       />
     );
   };

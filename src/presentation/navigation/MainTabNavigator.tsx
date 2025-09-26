@@ -1,4 +1,3 @@
-//src/presentation/navigation/MainTabNavigator.tsx
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
@@ -8,19 +7,31 @@ import {
   Files,
 } from "lucide-react-native";
 
-// 👇 CORREÇÃO DOS IMPORTS AQUI
-// 👇 CAMINHOS ATUALIZADOS PARA A NOVA ESTRUTURA
+// Supondo que você já tenha o StackNavigator para Pedidos
+import { PedidosStackNavigator } from "./PedidosStackNavigator";
+// E as outras telas
 import { DashboardScreen } from "@/presentation/screens/dashboard/DashboardScreen";
 import { AgendaScreen } from "@/presentation/screens/agenda/AgendaScreen";
 import { FinanceiroScreen } from "@/presentation/screens/financeiro/FinanceiroScreen";
-import { PedidosStackNavigator } from "./PedidosStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
 export function MainTabNavigator() {
+  const activeColor = "#0A84FF"; // Azul para ícone ativo
+  const inactiveColor = "#8A8A8E"; // Cinza para ícone inativo
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        headerShown: false, // Vamos usar os headers de dentro de cada tela/stack
+        tabBarActiveTintColor: activeColor,
+        tabBarInactiveTintColor: inactiveColor,
+        tabBarShowLabel: true, // Para mostrar o nome abaixo do ícone
+        tabBarStyle: {
+          borderTopWidth: 1,
+          borderTopColor: "#F0F0F0",
+          backgroundColor: "#FFFFFF",
+        },
         tabBarIcon: ({ color, size }) => {
           if (route.name === "Dashboard") {
             return <BarChart3 color={color} size={size} />;
@@ -32,9 +43,6 @@ export function MainTabNavigator() {
             return <DollarSign color={color} size={size} />;
           }
         },
-        tabBarActiveTintColor: "#007AFF",
-        tabBarInactiveTintColor: "gray",
-        headerShown: false,
       })}
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
