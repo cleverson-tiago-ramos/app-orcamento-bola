@@ -1,9 +1,7 @@
-// /src/presentation/screens/pedidos/usePedidos.ts
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Orcamento } from "@/core/domain/entities/Orcamento";
 
-// 👇 CRIE UMA LISTA DE DADOS FALSOS
 const mockPedidos: Orcamento[] = [
   {
     id: 1,
@@ -35,28 +33,22 @@ const mockPedidos: Orcamento[] = [
   },
 ];
 
+// 👇 A LINHA MAIS IMPORTANTE É ESTA. PRECISA SER "export function".
 export function usePedidos() {
   const [activeTab, setActiveTab] = useState("Últimos");
-
   const [pedidos, setPedidos] = useState<Orcamento[]>(mockPedidos);
-
-  // Apenas uma declaração da variável 'loading'
   const [loading, setLoading] = useState(false);
-
   const navigation = useNavigation();
 
   const handleTabPress = (tab: string) => {
     console.log(`Buscando dados para a aba: ${tab}`);
     setActiveTab(tab);
-    // Aqui você chamaria a função para buscar os dados filtrados
   };
 
   const handleFabPress = () => {
-    // Lógica de navegação que implementamos no passo anterior
     navigation.navigate("NovoPedido" as never);
   };
 
-  // O hook retorna tudo que a UI precisa para funcionar
   return {
     activeTab,
     pedidos,
@@ -65,3 +57,5 @@ export function usePedidos() {
     handleFabPress,
   };
 }
+
+// GARANTA QUE NÃO HÁ "export default usePedidos;" AQUI NO FINAL

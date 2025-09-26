@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Header } from "@/presentation/components/header/Header";
 import { styles } from "./styles";
 import { useDashboard } from "./useDashboard";

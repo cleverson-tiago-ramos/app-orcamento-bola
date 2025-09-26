@@ -1,6 +1,6 @@
 //src/presentation/screens/pedidos/PedidosScreen.tsx
 import React from "react";
-import { View, FlatList, ActivityIndicator } from "react-native";
+import { View, FlatList, ActivityIndicator, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Hook com a lógica
@@ -13,7 +13,7 @@ import { Header } from "@/presentation/components/header/Header";
 import { SearchBar } from "@/presentation/components/search-bar/SearchBar";
 import { TabFilter } from "@/presentation/components/tab-filter/TabFilter";
 import { EmptyState } from "@/presentation/components/empty-state/EmptyState";
-import { Fab } from "@/presentation/components/Fab/Fab";
+import { Fab } from "@/presentation/components/fab/Fab";
 
 export function PedidosScreen() {
   // Pegamos toda a lógica e os dados do nosso hook
