@@ -1,5 +1,7 @@
+//src/presentation/screens/pedidos/PedidosScreen.tsx
 import React from "react";
-import { View, SafeAreaView, FlatList, ActivityIndicator } from "react-native";
+import { View, FlatList, ActivityIndicator } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Hook com a lógica
 import { usePedidos } from "./usePedidos";
@@ -29,7 +31,8 @@ export function PedidosScreen() {
     return (
       <FlatList
         data={pedidos}
-        renderItem={({ item }) => <Text>{item.name}</Text>}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <Text>{item.clienteNome}</Text>}
       />
     );
   };

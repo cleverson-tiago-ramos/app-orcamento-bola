@@ -1,14 +1,49 @@
+// /src/presentation/screens/pedidos/usePedidos.ts
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { Orcamento } from "@/core/domain/entities/Orcamento";
 
-// No futuro, podemos importar as entidades do nosso domínio
-// import { Pedido } from '@/core/domain/entities/Pedido';
+// 👇 CRIE UMA LISTA DE DADOS FALSOS
+const mockPedidos: Orcamento[] = [
+  {
+    id: 1,
+    clienteNome: "Construtora Alfa Ltda",
+    status: "aprovado",
+    valorTotal: 12500.0,
+    dataCriacao: new Date(),
+  },
+  {
+    id: 2,
+    clienteNome: "João da Silva - Reforma",
+    status: "aberto",
+    valorTotal: 7800.5,
+    dataCriacao: new Date(),
+  },
+  {
+    id: 3,
+    clienteNome: "Condomínio Residencial Sol",
+    status: "concluido",
+    valorTotal: 25400.0,
+    dataCriacao: new Date(),
+  },
+  {
+    id: 4,
+    clienteNome: "Maria Oliveira - Decoração",
+    status: "cancelado",
+    valorTotal: 3200.0,
+    dataCriacao: new Date(),
+  },
+];
 
 export function usePedidos() {
   const [activeTab, setActiveTab] = useState("Últimos");
 
-  // Futuramente, aqui entrará a busca de dados do SQLite
-  const [pedidos, setPedidos] = useState([]); // Começa com uma lista vazia
+  const [pedidos, setPedidos] = useState<Orcamento[]>(mockPedidos);
+
+  // Apenas uma declaração da variável 'loading'
   const [loading, setLoading] = useState(false);
+
+  const navigation = useNavigation();
 
   const handleTabPress = (tab: string) => {
     console.log(`Buscando dados para a aba: ${tab}`);
@@ -17,8 +52,8 @@ export function usePedidos() {
   };
 
   const handleFabPress = () => {
-    console.log("Navegar para a tela de Novo Pedido");
-    // Aqui entrará a lógica de navegação
+    // Lógica de navegação que implementamos no passo anterior
+    navigation.navigate("NovoPedido" as never);
   };
 
   // O hook retorna tudo que a UI precisa para funcionar

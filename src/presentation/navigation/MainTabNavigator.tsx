@@ -1,3 +1,4 @@
+//src/presentation/navigation/MainTabNavigator.tsx
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
@@ -8,10 +9,11 @@ import {
 } from "lucide-react-native";
 
 // 👇 CORREÇÃO DOS IMPORTS AQUI
-import { DashboardScreen } from "@/presentation/screens/DashboardScreen";
-import { AgendaScreen } from "@/presentation/screens/AgendaScreen";
-import { FinanceiroScreen } from "@/presentation/screens/FinanceiroScreen";
-import { PedidosStackNavigator } from "./PedidosStackNavigator"; // <-- Importe o StackNavigator
+// 👇 CAMINHOS ATUALIZADOS PARA A NOVA ESTRUTURA
+import { DashboardScreen } from "@/presentation/screens/dashboard/DashboardScreen";
+import { AgendaScreen } from "@/presentation/screens/agenda/AgendaScreen";
+import { FinanceiroScreen } from "@/presentation/screens/financeiro/FinanceiroScreen";
+import { PedidosStackNavigator } from "./PedidosStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -36,7 +38,6 @@ export function MainTabNavigator() {
       })}
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      {/* 👇 CORREÇÃO DO COMPONENTE AQUI */}
       <Tab.Screen name="Pedidos" component={PedidosStackNavigator} />
       <Tab.Screen name="Agenda" component={AgendaScreen} />
       <Tab.Screen name="Financeiro" component={FinanceiroScreen} />

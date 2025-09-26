@@ -1,3 +1,4 @@
+import "react-native-gesture-handler"; // Importante para o Stack Navigator
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { MainTabNavigator } from "./src/presentation/navigation/MainTabNavigator";
