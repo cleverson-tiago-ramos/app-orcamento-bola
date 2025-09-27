@@ -1,4 +1,4 @@
-//src/presentation/screens/clientes/ClienteFormScreen.tsx
+// src/presentation/screens/clientes/form/ClienteFormScreen.tsx
 import React, { useMemo, useState } from "react";
 import {
   View,
@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  Modal,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
@@ -14,31 +13,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { PedidosStackParamList, Cliente } from "@/types/navigation";
-import { X, PlusCircle, MapPin } from "lucide-react-native";
-import { styles } from "./clienteForm.styles";
+import { X, PlusCircle } from "lucide-react-native";
+
+import { styles } from "./styles";
 import { COLORS } from "@/theme/colors";
-
-const BRAND = "#F4781F";
-
-const onlyDigits = (v: string) => v.replace(/\D+/g, "");
-const maskPhoneBR = (v: string) => {
-  const d = onlyDigits(v).slice(0, 11);
-  if (d.length <= 10) return d.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
-  return d.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3");
-};
-const maskCpfCnpj = (v: string) => {
-  const d = onlyDigits(v).slice(0, 14);
-  if (d.length <= 11)
-    return d
-      .replace(/^(\d{3})(\d)/, "$1.$2")
-      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
-      .replace(/\.(\d{3})(\d)/, ".$1-$2");
-  return d
-    .replace(/^(\d{2})(\d)/, "$1.$2")
-    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-    .replace(/\.(\d{3})(\d)/, ".$1/$2")
-    .replace(/(\d{4})(\d)/, "$1-$2");
-};
+import { AddressSheet } from "@/presentation/components/form/address-sheet";
+import { maskCpfCnpj, maskPhoneBR } from "@/presentation/utils/masks";
 
 export function ClienteFormScreen() {
   const navigation =
@@ -199,85 +179,13 @@ export function ClienteFormScreen() {
         </View>
       </KeyboardAvoidingView>
 
-      {/* Modal Endereço */}
-      <Modal transparent animationType="slide" visible={addrOpen}>
-        <TouchableOpacity
-          style={styles.addrOverlay}
-          activeOpacity={1}
-          onPress={() => setAddrOpen(false)}
-        >
-          <View style={styles.addrSheet}>
-            <View style={styles.addrHeader}>
-              <MapPin color={COLORS.brand} size={18} />
-              <Text style={styles.addrTitle}>Endereço</Text>
-            </View>
-
-            <ScrollView keyboardShouldPersistTaps="handled">
-              <View style={styles.addrRow}>
-                <TextInput
-                  placeholder="CEP"
-                  placeholderTextColor={COLORS.placeholderTextColor}
-                  style={styles.addrInput}
-                  keyboardType="number-pad"
-                  value={cep}
-                  onChangeText={setCep}
-                />
-              </View>
-              <View style={styles.addrRow}>
-                <TextInput
-                  placeholder="Rua"
-                  placeholderTextColor={COLORS.placeholderTextColor}
-                  style={styles.addrInput}
-                  value={rua}
-                  onChangeText={setRua}
-                />
-              </View>
-              <View style={[styles.addrRow, { flexDirection: "row", gap: 10 }]}>
-                <TextInput
-                  placeholder="Número"
-                  placeholderTextColor={COLORS.placeholderTextColor}
-                  style={[styles.addrInput, { flex: 1 }]}
-                  keyboardType="number-pad"
-                  value={numero}
-                  onChangeText={setNumero}
-                />
-                <TextInput
-                  placeholder="Bairro"
-                  placeholderTextColor={COLORS.placeholderTextColor}
-                  style={[styles.addrInput, { flex: 2 }]}
-                  value={bairro}
-                  onChangeText={setBairro}
-                />
-              </View>
-              <View style={[styles.addrRow, { flexDirection: "row", gap: 10 }]}>
-                <TextInput
-                  placeholder="Cidade"
-                  placeholderTextColor={COLORS.placeholderTextColor}
-                  style={[styles.addrInput, { flex: 2 }]}
-                  value={cidade}
-                  onChangeText={setCidade}
-                />
-                <TextInput
-                  placeholder="UF"
-                  placeholderTextColor={COLORS.placeholderTextColor}
-                  style={[styles.addrInput, { flex: 1 }]}
-                  maxLength={2}
-                  autoCapitalize="characters"
-                  value={uf}
-                  onChangeText={setUf}
-                />
-              </View>
-
-              <TouchableOpacity
-                style={[styles.saveButton, { marginTop: 10 }]}
-                onPress={() => setAddrOpen(false)}
-              >
-                <Text style={styles.saveButtonText}>Salvar Endereço</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+      {/* Modal Endereço (componente reutilizável) */}
+      <AddressSheet
+        visible={addrOpen}
+        onClose={() => setAddrOpen(false)}
+        values={{ cep, rua, numero, bairro, cidade, uf }}
+        onChange={{ setCep, setRua, setNumero, setBairro, setCidade, setUf }}
+      />
     </SafeAreaView>
   );
 }
