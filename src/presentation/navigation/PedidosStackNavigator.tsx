@@ -7,6 +7,7 @@ import { PedidosScreen } from "../screens/pedidos/PedidosScreen";
 import { NewPedidoScreen } from "../screens/pedidos/new/NewPedidoScreen";
 import { NewServicoScreen } from "@/presentation/screens/servico/NewServicoScreen"; // Importe a nova tela
 import { ClientesListScreen } from "@/presentation/screens/clientes/ClientesListScreen"; // 👈 nova tela
+import { ClienteFormScreen } from "@/presentation/screens/clientes/form/ClienteFormScreen"; // 👈 nova tela
 const Stack = createNativeStackNavigator<PedidosStackParamList>();
 
 export function PedidosStackNavigator() {
@@ -17,6 +18,7 @@ export function PedidosStackNavigator() {
       <Stack.Screen name="NewServico" component={NewServicoScreen} />
       {/* clientes */}
       <Stack.Screen name="ClientesList" component={ClientesListScreen} />
+      <Stack.Screen name="ClienteForm" component={ClienteFormScreen} />
       {/* Registre aqui se for navegar para elas pelo modal */}
       {/* <Stack.Screen name="PDVRapida" component={PDVRapidaScreen} /> */}
       {/* <Stack.Screen name="NovoVenda" component={NovoVendaScreen} /> */}
