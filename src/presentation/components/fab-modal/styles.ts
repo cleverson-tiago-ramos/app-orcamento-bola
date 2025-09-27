@@ -1,5 +1,8 @@
 import { StyleSheet } from "react-native";
 
+const orangeColor = "#F4781F";
+const redColor = "#FF3B30";
+
 export const styles = StyleSheet.create({
   overlay: {
     flex: 1,
@@ -11,91 +14,78 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingHorizontal: 20,
-    paddingVertical: 30,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 10,
+    paddingVertical: 20,
   },
-  sectionTitle: {
-    fontSize: 18,
+  mainTitle: {
+    fontSize: 22,
     fontWeight: "bold",
     color: "#1C1C1E",
-    marginBottom: 15,
-    marginTop: 20,
-  },
-
-  /** === GRID "NOVO" (cards com ícone redondo + texto ao lado) === */
-  buttonGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
     marginBottom: 20,
   },
-  cardButton: {
-    width: "48%", // 2 colunas
-    flexDirection: "row", // ícone e textos lado a lado
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 14,
-
-    // borda suave:
-    borderWidth: 1,
-    borderColor: "#ECECEC",
-
-    // sombra leve:
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 2,
-    elevation: 1,
-
-    // espaçamento entre as linhas do grid:
-    marginBottom: 14,
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#8A8A8E",
+    marginBottom: 12,
+    textTransform: "uppercase",
   },
-  iconBubble: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#F4781F",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
+  cardRow: {
+    flexDirection: "row",
+    marginBottom: 12,
   },
-  textCol: {
+  cardButtonLeft: {
     flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F7F8FA",
+    borderRadius: 12,
+    padding: 16,
+    marginRight: 6,
   },
-  cardButtonTitle: {
+  cardButtonRight: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F7F8FA",
+    borderRadius: 12,
+    padding: 16,
+    marginLeft: 6,
+  },
+  cardButtonText: {
     fontSize: 16,
-    fontWeight: "700",
-    color: "#2D2D2D",
-    lineHeight: 20,
+    fontWeight: "600",
+    color: "#1C1C1E",
+    marginLeft: 12,
   },
   cardButtonSubText: {
     fontSize: 13,
     color: "#8A8A8E",
-    marginTop: 2,
+    marginLeft: 12,
   },
-
-  /** === GRID "CADASTRO" (mantido) === */
   gridRow: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginBottom: 20,
+    justifyContent: "space-around",
+    marginTop: 10,
   },
   gridItem: {
-    width: "30%",
+    width: "20%",
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: 20,
+  },
+  iconCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#FFF7F0", // Um laranja bem claro
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
   },
   gridItemText: {
     fontSize: 13,
-    color: "#1C1C1E",
-    marginTop: 8,
+    color: orangeColor,
+    fontWeight: "600",
     textAlign: "center",
   },
 });

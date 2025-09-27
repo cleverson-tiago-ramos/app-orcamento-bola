@@ -9,6 +9,8 @@ import {
   CalendarDays,
   Wallet,
   DollarSign,
+  Landmark, // Ícone novo para Despesa
+  ClipboardPlus, // Ícone novo para Receita
 } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "./styles";
@@ -39,98 +41,85 @@ export function FabModal({ isVisible, onClose }: FabModalProps) {
         onPress={onClose}
       >
         <View style={styles.modalContent}>
-          {/* Seção "Novo" */}
-          <Text style={styles.sectionTitle}>Novo</Text>
+          <Text style={styles.mainTitle}>Novo</Text>
 
-          <View style={styles.buttonGrid}>
-            {/* Serviço */}
+          {/* Seção Pedido */}
+          <Text style={styles.sectionTitle}>Pedido</Text>
+          <View style={styles.cardRow}>
             <TouchableOpacity
-              style={styles.cardButton}
+              style={styles.cardButtonLeft}
               onPress={() => handleOptionPress("NovoServico")}
-              activeOpacity={0.9}
-              hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
             >
-              <View style={styles.iconBubble}>
-                <BriefcaseBusiness size={22} color="#FFFFFF" />
-              </View>
-
-              <View style={styles.textCol}>
-                <Text style={styles.cardButtonTitle}>Serviço</Text>
-                <Text style={styles.cardButtonSubText}>—</Text>
-              </View>
+              <BriefcaseBusiness size={24} color="#FF3B30" />
+              <Text style={styles.cardButtonText}>Serviço</Text>
             </TouchableOpacity>
-
-            {/* PDV */}
             <TouchableOpacity
-              style={styles.cardButton}
+              style={styles.cardButtonRight}
               onPress={() => handleOptionPress("PDVRapida")}
-              activeOpacity={0.9}
-              hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
             >
-              <View style={styles.iconBubble}>
-                <ReceiptText size={22} color="#FFFFFF" />
-              </View>
-
-              <View style={styles.textCol}>
-                <Text style={styles.cardButtonTitle}>PDV</Text>
+              <ReceiptText size={24} color="#FF3B30" />
+              <View>
+                <Text style={styles.cardButtonText}>PDV</Text>
                 <Text style={styles.cardButtonSubText}>Venda Rápida</Text>
               </View>
             </TouchableOpacity>
-
-            {/* Venda */}
+          </View>
+          <View style={styles.cardRow}>
             <TouchableOpacity
-              style={styles.cardButton}
+              style={styles.cardButtonLeft}
               onPress={() => handleOptionPress("NovoVenda")}
-              activeOpacity={0.9}
-              hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
             >
-              <View style={styles.iconBubble}>
-                <ShoppingCart size={22} color="#FFFFFF" />
-              </View>
-
-              <View style={styles.textCol}>
-                <Text style={styles.cardButtonTitle}>Venda</Text>
-                <Text style={styles.cardButtonSubText}>—</Text>
-              </View>
+              <ShoppingCart size={24} color="#FF3B30" />
+              <Text style={styles.cardButtonText}>Venda</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Seção "Cadastro" (mantida) */}
+          {/* Seção Cadastro */}
           <Text style={styles.sectionTitle}>Cadastro</Text>
           <View style={styles.gridRow}>
             <TouchableOpacity
               style={styles.gridItem}
               onPress={() => handleOptionPress("CadastroReceita")}
             >
-              <DollarSign size={28} color="#3A3A3A" />
+              <View style={styles.iconCircle}>
+                <ClipboardPlus size={24} color="#F4781F" />
+              </View>
               <Text style={styles.gridItemText}>Receita</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.gridItem}
               onPress={() => handleOptionPress("CadastroDespesa")}
             >
-              <Wallet size={28} color="#3A3A3A" />
+              <View style={styles.iconCircle}>
+                <Landmark size={24} color="#F4781F" />
+              </View>
               <Text style={styles.gridItemText}>Despesa</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.gridItem}
               onPress={() => handleOptionPress("CadastroAgenda")}
             >
-              <CalendarDays size={28} color="#3A3A3A" />
+              <View style={styles.iconCircle}>
+                <CalendarDays size={24} color="#F4781F" />
+              </View>
               <Text style={styles.gridItemText}>Agenda</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.gridItem}
               onPress={() => handleOptionPress("CadastroServico")}
             >
-              <BriefcaseBusiness size={28} color="#3A3A3A" />
+              <View style={styles.iconCircle}>
+                <BriefcaseBusiness size={24} color="#F4781F" />
+              </View>
               <Text style={styles.gridItemText}>Serviço</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.gridItem}
               onPress={() => handleOptionPress("CadastroProduto")}
             >
-              <Package size={28} color="#3A3A3A" />
+              <View style={styles.iconCircle}>
+                <Package size={24} color="#F4781F" />
+              </View>
               <Text style={styles.gridItemText}>Produto</Text>
             </TouchableOpacity>
           </View>
