@@ -8,16 +8,25 @@ export const styles = StyleSheet.create({
     height: 44,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#E6E6E6",
+    borderColor: COLORS.border,
     backgroundColor: COLORS.backgroundLight,
     justifyContent: "center",
   },
+  // ✅ borda e leve glow quando tiver texto
+  containerActive: {
+    borderColor: COLORS.success,
+    shadowColor: COLORS.success,
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 2,
+  },
   input: {
     height: 44,
-    paddingLeft: 40, // espaço para o ícone
-    paddingRight: 40, // espaço para o clear
+    paddingLeft: 40,
+    paddingRight: 40,
     fontSize: 16,
-    color: "#2D2D2D",
+    color: COLORS.text,
     ...Platform.select({ android: { paddingVertical: 0 } }),
   },
   leftIcon: {

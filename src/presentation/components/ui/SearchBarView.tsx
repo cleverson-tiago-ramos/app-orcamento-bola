@@ -32,15 +32,23 @@ export function SearchBarView({
   autoFocus,
   containerStyle,
   inputProps,
-  iconColor = "#F4781F",
+  iconColor = COLORS.brand,
   showClear,
   onChangeText,
   onSubmitEditing,
   onClear,
 }: SearchBarViewProps) {
+  const isActive = value?.length > 0;
   return (
-    <View style={[styles.container, containerStyle]}>
+    <View
+      style={[
+        styles.container,
+        isActive && styles.containerActive,
+        containerStyle,
+      ]}
+    >
       <Search size={20} color={iconColor} style={styles.leftIcon} />
+
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -52,6 +60,7 @@ export function SearchBarView({
         autoFocus={autoFocus}
         {...inputProps}
       />
+
       {showClear && (
         <TouchableOpacity
           style={styles.clearBtn}
