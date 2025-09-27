@@ -1,12 +1,23 @@
 // src/types/navigation.ts
 import { NavigatorScreenParams } from "@react-navigation/native";
 
+export type Cliente = {
+  id: string;
+  nome: string;
+  telefone?: string;
+};
+
 export type PedidosStackParamList = {
   PedidosList: undefined;
   NewPedido: undefined;
-  NewServico: undefined;
+  // recebe o cliente selecionado opcionalmente
+  NewServico: { cliente?: Cliente } | undefined;
 
-  // registre aqui as telas que você for usar pelo modal:
+  // novas rotas de cliente
+  ClientesList: undefined;
+  ClienteForm?: { initial?: Partial<Cliente> } | undefined;
+
+  // (se já usa)
   PDVRapida?: undefined;
   NovoVenda?: undefined;
   CadastroReceita?: undefined;
