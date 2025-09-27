@@ -1,3 +1,4 @@
+//src/presentation/screens/clientes/form/ClienteFormScreen.tsx
 import React, { useMemo, useState } from "react";
 import {
   View,
@@ -70,7 +71,6 @@ export function ClienteFormScreen() {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Novo Cliente</Text>
       </View>
-
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -195,11 +195,11 @@ export function ClienteFormScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-
       {/* Modal Endereço */}
+
       <AddressSheet
         visible={addrOpen}
-        onClose={() => setAddrOpen(false)}
+        onClose={handleCloseAddr} // Use a função do hook
         values={{ cep, rua, numero, bairro, cidade, uf }}
         onChange={{ setCep, setRua, setNumero, setBairro, setCidade, setUf }}
       />

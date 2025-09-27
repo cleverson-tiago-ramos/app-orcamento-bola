@@ -1,9 +1,10 @@
+//src/theme/colors.ts
 export const COLORS = {
   brand: "#F4781F",
   brandLight: "#FF9E42",
-
-  success: "#2DBE7E",
-
+  error: "#dc2626",
+  success: "#16a34a",
+  white: "pink",
   text: "#2D2D2D",
   textDark: "#2D2D2D",
   muted: "#6B7280", // novo: textos secundários

@@ -1,5 +1,5 @@
 // src/presentation/components/form/address-sheet/AddressSheet.tsx
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import {
   Modal,
   ScrollView,
@@ -7,10 +7,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from "react-native";
-import { MapPin } from "lucide-react-native";
+import { MapPin, Search } from "lucide-react-native";
 import { styles } from "./styles";
 import { COLORS } from "@/theme/colors";
+import { useCEP } from "@/presentation/hooks/useCEP";
 
 type Props = {
   visible: boolean;
@@ -42,6 +44,69 @@ export function AddressSheet({
   const { cep, rua, numero, bairro, cidade, uf } = values;
   const { setCep, setRua, setNumero, setBairro, setCidade, setUf } = onChange;
 
+  const { buscarCEP, carregando, erroCEP, limparErro } = useCEP();
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+
+  // Format CEP enquanto digita
+  const handleCepChange = (value: string) => {
+    // Remove caracteres não numéricos
+    const cepLimpo = value.replace(/\D/g, "");
+
+    // Aplica máscara
+    if (cepLimpo.length <= 5) {
+      setCep(cepLimpo);
+    } else {
+      setCep(cepLimpo.replace(/^(\d{5})(\d{0,3})/, "$1-$2"));
+    }
+
+    limparErro();
+  };
+
+  // Busca automática quando CEP estiver completo
+  useEffect(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    const cepLimpo = cep.replace(/\D/g, "");
+
+    if (cepLimpo.length === 8) {
+      const newTimeoutId = setTimeout(async () => {
+        const endereco = await buscarCEP(cep);
+
+        if (endereco) {
+          setRua(endereco.logradouro);
+          setBairro(endereco.bairro);
+          setCidade(endereco.localidade);
+          setUf(endereco.uf);
+
+          // Foca automaticamente no campo número
+          // Você pode usar refs para isso se necessário
+        }
+      }, 800); // Delay de 800ms para evitar muitas requisições
+
+      setTimeoutId(newTimeoutId);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [cep, buscarCEP]);
+
+  // Limpa timeout quando modal fecha
+  useEffect(() => {
+    if (!visible && timeoutId) {
+      clearTimeout(timeoutId);
+      limparErro();
+    }
+  }, [visible]);
+
+  const handleSave = () => {
+    onClose();
+  };
+
   return (
     <Modal transparent animationType="slide" visible={visible}>
       <TouchableOpacity
@@ -56,16 +121,34 @@ export function AddressSheet({
           </View>
 
           <ScrollView keyboardShouldPersistTaps="handled">
+            {/* Campo CEP com busca automática */}
             <View style={styles.addrRow}>
-              <TextInput
-                placeholder="CEP"
-                placeholderTextColor={COLORS.placeholderTextColor}
-                style={styles.addrInput}
-                keyboardType="number-pad"
-                value={cep}
-                onChangeText={setCep}
-              />
+              <View style={styles.cepContainer}>
+                <TextInput
+                  placeholder="00000-000"
+                  placeholderTextColor={COLORS.placeholderTextColor}
+                  style={[styles.addrInput, styles.cepInput]}
+                  keyboardType="number-pad"
+                  value={cep}
+                  onChangeText={handleCepChange}
+                  maxLength={9}
+                />
+                {carregando ? (
+                  <ActivityIndicator size="small" color={COLORS.brand} />
+                ) : (
+                  <Search color={COLORS.placeholderTextColor} size={16} />
+                )}
+              </View>
+
+              {erroCEP && <Text style={styles.erroText}>{erroCEP}</Text>}
+
+              {cep.replace(/\D/g, "").length === 8 &&
+                !erroCEP &&
+                !carregando && (
+                  <Text style={styles.sucessoText}>CEP válido</Text>
+                )}
             </View>
+
             <View style={styles.addrRow}>
               <TextInput
                 placeholder="Rua"
@@ -73,8 +156,10 @@ export function AddressSheet({
                 style={styles.addrInput}
                 value={rua}
                 onChangeText={setRua}
+                editable={!carregando}
               />
             </View>
+
             <View style={[styles.addrRow, { flexDirection: "row", gap: 10 }]}>
               <TextInput
                 placeholder="Número"
@@ -83,6 +168,7 @@ export function AddressSheet({
                 keyboardType="number-pad"
                 value={numero}
                 onChangeText={setNumero}
+                editable={!carregando}
               />
               <TextInput
                 placeholder="Bairro"
@@ -90,8 +176,10 @@ export function AddressSheet({
                 style={[styles.addrInput, { flex: 2 }]}
                 value={bairro}
                 onChangeText={setBairro}
+                editable={!carregando}
               />
             </View>
+
             <View style={[styles.addrRow, { flexDirection: "row", gap: 10 }]}>
               <TextInput
                 placeholder="Cidade"
@@ -99,6 +187,7 @@ export function AddressSheet({
                 style={[styles.addrInput, { flex: 2 }]}
                 value={cidade}
                 onChangeText={setCidade}
+                editable={!carregando}
               />
               <TextInput
                 placeholder="UF"
@@ -108,14 +197,18 @@ export function AddressSheet({
                 autoCapitalize="characters"
                 value={uf}
                 onChangeText={setUf}
+                editable={!carregando}
               />
             </View>
 
             <TouchableOpacity
               style={[styles.saveButton, { marginTop: 10 }]}
-              onPress={onClose}
+              onPress={handleSave}
+              disabled={carregando}
             >
-              <Text style={styles.saveButtonText}>Salvar Endereço</Text>
+              <Text style={styles.saveButtonText}>
+                {carregando ? "Buscando..." : "Salvar Endereço"}
+              </Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

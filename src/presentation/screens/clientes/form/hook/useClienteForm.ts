@@ -1,4 +1,3 @@
-// src/presentation/screens/clientes/form/hooks/useClienteForm.ts
 import { useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -34,8 +33,26 @@ export function useClienteForm() {
       id: Date.now().toString(),
       nome: nome.trim(),
       telefone: celular || telefone,
+      email: email.trim() || undefined,
+      documento: doc.trim() || undefined,
+      observacoes: obs.trim() || undefined,
+      endereco: cep
+        ? {
+            cep,
+            logradouro: rua,
+            numero,
+            bairro,
+            cidade,
+            uf,
+          }
+        : undefined,
     };
     navigation.navigate("NewServico", { cliente: novoCliente });
+  };
+
+  // Limpar endereço quando modal fechar
+  const handleCloseAddr = () => {
+    setAddrOpen(false);
   };
 
   return {
@@ -74,6 +91,7 @@ export function useClienteForm() {
     // derived/handlers
     canSave,
     handleSave,
+    handleCloseAddr,
 
     // masks
     applyPhone: (t: string) => setCelular(maskPhoneBR(t)),
