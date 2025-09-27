@@ -5,7 +5,6 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
@@ -27,6 +26,8 @@ import { AddressSheet } from "@/presentation/components/form/address-sheet";
 import { BrandSwitch } from "@/presentation/components/brand-switch/BrandSwitch";
 import { HeaderBack } from "@/presentation/components/header/HeaderBack";
 import { FormRow } from "@/presentation/components/form/form-row/FormRow";
+import { TextAreaRow } from "@/presentation/components/form/text-area-row/TextAreaRow";
+import { SectionTitle } from "@/presentation/components/typography/SectionTitle";
 import { useClienteForm } from "./hook/useClienteForm";
 
 export function ClienteFormScreen() {
@@ -79,6 +80,8 @@ export function ClienteFormScreen() {
           style={styles.container}
           keyboardShouldPersistTaps="handled"
         >
+          <SectionTitle>Dados do cliente</SectionTitle>
+
           <FormRow
             Icon={UserRound}
             inputProps={{
@@ -89,6 +92,8 @@ export function ClienteFormScreen() {
               onChangeText: setNome,
             }}
           />
+
+          <SectionTitle>Contato</SectionTitle>
 
           <FormRow
             Icon={Smartphone}
@@ -122,7 +127,14 @@ export function ClienteFormScreen() {
 
           {!usarCelularComoWhatsapp && (
             <FormRow
-              Icon={MaterialCommunityIcons as any}
+              Left={
+                <MaterialCommunityIcons
+                  name="whatsapp"
+                  size={20}
+                  color={COLORS.brand}
+                  style={{ marginRight: 10 }}
+                />
+              }
               inputProps={{
                 placeholder: "WhatsApp (diferente do celular)",
                 keyboardType: "phone-pad",
@@ -167,6 +179,8 @@ export function ClienteFormScreen() {
             <Text style={styles.addAddrText}>Adicionar Endereço</Text>
           </TouchableOpacity>
 
+          <SectionTitle>Documentos</SectionTitle>
+
           <FormRow
             Icon={IdCard}
             inputProps={{
@@ -179,26 +193,18 @@ export function ClienteFormScreen() {
             }}
           />
 
-          {/* Observações (multilinha mantém o bloco atual) */}
-          <View style={styles.textAreaWrap}>
-            <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-              <StickyNote
-                size={20}
-                color={COLORS.brand}
-                style={styles.inputIcon}
-              />
-              <TextInput
-                placeholder="Observações"
-                placeholderTextColor={COLORS.placeholderTextColor}
-                style={[styles.textArea, { flex: 1 }]}
-                value={obs}
-                onChangeText={setObs}
-                multiline
-                numberOfLines={4}
-                textAlignVertical="top"
-              />
-            </View>
-          </View>
+          <SectionTitle>Observações</SectionTitle>
+
+          <TextAreaRow
+            Icon={StickyNote}
+            inputProps={{
+              placeholder: "Observações",
+              value: obs,
+              onChangeText: setObs,
+              multiline: true,
+              numberOfLines: 4,
+            }}
+          />
         </ScrollView>
 
         <View style={styles.footer}>
