@@ -3,8 +3,8 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.4)", // Fundo escuro semi-transparente
-    justifyContent: "flex-end", // Alinha o modal na parte inferior
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    justifyContent: "flex-end",
   },
   modalContent: {
     backgroundColor: "#FFFFFF",
@@ -25,45 +25,70 @@ export const styles = StyleSheet.create({
     marginBottom: 15,
     marginTop: 20,
   },
+
+  /** === GRID "NOVO" (cards com ícone redondo + texto ao lado) === */
   buttonGrid: {
     flexDirection: "row",
-    flexWrap: "wrap", // Permite que os itens quebrem a linha
-    justifyContent: "flex-start",
-    gap: 15, // Espaçamento entre os botões
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   cardButton: {
-    width: "45%", // Quase metade da largura para 2 colunas
-    backgroundColor: "#F7F8FA",
+    width: "48%", // 2 colunas
+    flexDirection: "row", // ícone e textos lado a lado
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
-    padding: 20,
-    alignItems: "flex-start", // Alinha conteúdo à esquerda
-    justifyContent: "space-between",
-    minHeight: 100, // Altura mínima para os cards
+    paddingVertical: 16,
+    paddingHorizontal: 14,
+
+    // borda suave:
+    borderWidth: 1,
+    borderColor: "#ECECEC",
+
+    // sombra leve:
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.06,
     shadowRadius: 2,
     elevation: 1,
+
+    // espaçamento entre as linhas do grid:
+    marginBottom: 14,
   },
-  cardButtonText: {
+  iconBubble: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#F4781F",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  textCol: {
+    flex: 1,
+  },
+  cardButtonTitle: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#1C1C1E",
-    marginTop: 10,
+    fontWeight: "700",
+    color: "#2D2D2D",
+    lineHeight: 20,
   },
   cardButtonSubText: {
-    fontSize: 12,
+    fontSize: 13,
     color: "#8A8A8E",
+    marginTop: 2,
   },
+
+  /** === GRID "CADASTRO" (mantido) === */
   gridRow: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between", // Distribui os itens
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   gridItem: {
-    width: "30%", // Para ter 3 colunas
+    width: "30%",
     alignItems: "center",
     marginBottom: 15,
   },
