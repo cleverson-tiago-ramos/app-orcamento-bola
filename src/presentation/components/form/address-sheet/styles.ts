@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.border,
   },
 
-  // Novos estilos para CEP
+  // Container CEP
   cepContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -48,6 +48,12 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.border,
     paddingHorizontal: 15,
   },
+  cepContainerError: {
+    borderColor: COLORS.error,
+  },
+  cepContainerSuccess: {
+    borderColor: COLORS.success,
+  },
   cepInput: {
     flex: 1,
     backgroundColor: "transparent",
@@ -56,17 +62,28 @@ export const styles = StyleSheet.create({
     marginRight: 10,
   },
 
+  // Container de mensagens
+  messageContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 5,
+    marginLeft: 5,
+  },
+
   // Estados de validação
   erroText: {
     color: COLORS.error,
     fontSize: 12,
-    marginTop: 5,
     marginLeft: 5,
   },
   sucessoText: {
     color: COLORS.success,
     fontSize: 12,
-    marginTop: 5,
+    marginLeft: 5,
+  },
+  infoText: {
+    color: COLORS.muted,
+    fontSize: 12,
     marginLeft: 5,
   },
 

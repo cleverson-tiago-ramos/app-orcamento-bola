@@ -6,7 +6,9 @@ export function useCEP() {
   const [erroCEP, setErroCEP] = useState<string | null>(null);
 
   const buscarCEP = useCallback(async (cep: string) => {
-    if (cep.replace(/\D/g, "").length !== 8) {
+    const cepLimpo = cep.replace(/\D/g, "");
+
+    if (cepLimpo.length !== 8) {
       setErroCEP(null);
       return null;
     }
@@ -16,15 +18,15 @@ export function useCEP() {
 
     try {
       const endereco = await CEPService.buscarCEP(cep);
-
-      if (!endereco) {
-        setErroCEP("CEP não encontrado");
-        return null;
-      }
-
       return endereco;
     } catch (error) {
-      setErroCEP("Erro ao buscar CEP. Tente novamente.");
+      // CORREÇÃO: Tratar diferentes tipos de erro
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Erro ao buscar CEP. Tente novamente.";
+
+      setErroCEP(errorMessage);
       return null;
     } finally {
       setCarregando(false);

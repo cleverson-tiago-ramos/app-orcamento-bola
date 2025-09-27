@@ -1,4 +1,3 @@
-// src/presentation/components/form/address-sheet/AddressSheet.tsx
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import {
   Modal,
@@ -9,7 +8,7 @@ import {
   View,
   ActivityIndicator,
 } from "react-native";
-import { MapPin, Search } from "lucide-react-native";
+import { MapPin, Search, AlertCircle, CheckCircle } from "lucide-react-native";
 import { styles } from "./styles";
 import { COLORS } from "@/theme/colors";
 import { useCEP } from "@/presentation/hooks/useCEP";
@@ -46,6 +45,7 @@ export function AddressSheet({
 
   const { buscarCEP, carregando, erroCEP, limparErro } = useCEP();
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [cepValido, setCepValido] = useState(false);
 
   // Format CEP enquanto digita
   const handleCepChange = (value: string) => {
@@ -59,6 +59,7 @@ export function AddressSheet({
       setCep(cepLimpo.replace(/^(\d{5})(\d{0,3})/, "$1-$2"));
     }
 
+    setCepValido(false);
     limparErro();
   };
 
@@ -75,17 +76,19 @@ export function AddressSheet({
         const endereco = await buscarCEP(cep);
 
         if (endereco) {
-          setRua(endereco.logradouro);
-          setBairro(endereco.bairro);
-          setCidade(endereco.localidade);
-          setUf(endereco.uf);
-
-          // Foca automaticamente no campo número
-          // Você pode usar refs para isso se necessário
+          setRua(endereco.logradouro || "");
+          setBairro(endereco.bairro || "");
+          setCidade(endereco.localidade || "");
+          setUf(endereco.uf || "");
+          setCepValido(true);
+        } else {
+          setCepValido(false);
         }
       }, 800); // Delay de 800ms para evitar muitas requisições
 
       setTimeoutId(newTimeoutId);
+    } else {
+      setCepValido(false);
     }
 
     return () => {
@@ -97,15 +100,20 @@ export function AddressSheet({
 
   // Limpa timeout quando modal fecha
   useEffect(() => {
-    if (!visible && timeoutId) {
-      clearTimeout(timeoutId);
+    if (!visible) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
       limparErro();
+      setCepValido(false);
     }
   }, [visible]);
 
   const handleSave = () => {
     onClose();
   };
+
+  const cepLimpo = cep.replace(/\D/g, "");
 
   return (
     <Modal transparent animationType="slide" visible={visible}>
@@ -123,7 +131,13 @@ export function AddressSheet({
           <ScrollView keyboardShouldPersistTaps="handled">
             {/* Campo CEP com busca automática */}
             <View style={styles.addrRow}>
-              <View style={styles.cepContainer}>
+              <View
+                style={[
+                  styles.cepContainer,
+                  erroCEP && styles.cepContainerError,
+                  cepValido && styles.cepContainerSuccess,
+                ]}
+              >
                 <TextInput
                   placeholder="00000-000"
                   placeholderTextColor={COLORS.placeholderTextColor}
@@ -135,20 +149,48 @@ export function AddressSheet({
                 />
                 {carregando ? (
                   <ActivityIndicator size="small" color={COLORS.brand} />
+                ) : cepValido ? (
+                  <CheckCircle color={COLORS.success} size={16} />
+                ) : erroCEP ? (
+                  <AlertCircle color={COLORS.error} size={16} />
                 ) : (
                   <Search color={COLORS.placeholderTextColor} size={16} />
                 )}
               </View>
 
-              {erroCEP && <Text style={styles.erroText}>{erroCEP}</Text>}
+              {/* Mensagens de status */}
+              {erroCEP && (
+                <View style={styles.messageContainer}>
+                  <AlertCircle color={COLORS.error} size={14} />
+                  <Text style={styles.erroText}>{erroCEP}</Text>
+                </View>
+              )}
 
-              {cep.replace(/\D/g, "").length === 8 &&
+              {cepLimpo.length === 8 &&
                 !erroCEP &&
-                !carregando && (
-                  <Text style={styles.sucessoText}>CEP válido</Text>
+                !carregando &&
+                cepValido && (
+                  <View style={styles.messageContainer}>
+                    <CheckCircle color={COLORS.success} size={14} />
+                    <Text style={styles.sucessoText}>
+                      CEP encontrado! Campos preenchidos automaticamente.
+                    </Text>
+                  </View>
+                )}
+
+              {cepLimpo.length === 8 &&
+                !erroCEP &&
+                !carregando &&
+                !cepValido && (
+                  <View style={styles.messageContainer}>
+                    <Text style={styles.infoText}>
+                      Digite um CEP válido para buscar o endereço
+                    </Text>
+                  </View>
                 )}
             </View>
 
+            {/* Campos de endereço */}
             <View style={styles.addrRow}>
               <TextInput
                 placeholder="Rua"

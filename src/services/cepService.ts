@@ -26,7 +26,7 @@ export class CEPService {
       const response = await fetch(`${this.BASE_URL}/${cepLimpo}/json/`);
 
       if (!response.ok) {
-        throw new Error("Erro na requisição");
+        throw new Error("Erro na conexão com o serviço de CEP");
       }
 
       const data: Endereco & { erro?: boolean } = await response.json();
@@ -37,8 +37,8 @@ export class CEPService {
 
       return data;
     } catch (error) {
-      console.error("Erro ao buscar CEP:", error);
-      return null;
+      // Não logar o erro aqui, deixe o hook tratar
+      throw error; // CORREÇÃO: lançar o erro para o hook capturar
     }
   }
 
