@@ -1,3 +1,4 @@
+//src/presentation/screens/clientes/ClientesListScreen.tsx
 import React, { useMemo, useState } from "react";
 import {
   View,
@@ -66,15 +67,17 @@ export function ClientesListScreen() {
       </LinearGradient>
 
       {/* Busca */}
-      <View style={{ paddingHorizontal: 16, marginTop: 10 }}>
+      <View style={styles.searchWrapper}>
         <TextInput
           placeholder="Buscar Clientes"
           placeholderTextColor="#9A9A9A"
           value={query}
           onChangeText={setQuery}
-          style={styles.searchInput}
+          style={[styles.searchInput, styles.searchInputWithIcon]}
+          returnKeyType="search"
         />
-        <Search />
+        {/* ícone dentro do input */}
+        <Search size={20} color={COLORS.brand} style={styles.searchIcon} />
       </View>
 
       {/* Lista / vazio */}
