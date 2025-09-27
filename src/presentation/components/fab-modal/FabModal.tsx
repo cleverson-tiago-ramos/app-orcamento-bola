@@ -1,4 +1,4 @@
-//src/presentation/components/fab-modal/FabModal.tsx
+// src/presentation/components/fab-modal/FabModal.tsx
 import React from "react";
 import { Modal, View, Text, TouchableOpacity } from "react-native";
 import {
@@ -8,11 +8,14 @@ import {
   Package,
   CalendarDays,
   Wallet,
-  DollarSign,
-  Landmark, // Ícone novo para Despesa
-  ClipboardPlus, // Ícone novo para Receita
+  ClipboardPlus,
 } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import type {
+  RootTabParamList,
+  PedidosStackParamList,
+} from "@/types/navigation";
 import { styles } from "./styles";
 
 interface FabModalProps {
@@ -20,12 +23,19 @@ interface FabModalProps {
   onClose: () => void;
 }
 
-export function FabModal({ isVisible, onClose }: FabModalProps) {
-  const navigation = useNavigation();
+const TAB_PEDIDOS: keyof RootTabParamList = "PedidosStack";
 
-  const handleOptionPress = (screenName: string) => {
+export function FabModal({ isVisible, onClose }: FabModalProps) {
+  const navigation = useNavigation<BottomTabNavigationProp<RootTabParamList>>();
+
+  /** Navega para uma screen dentro do PedidosStack com tipagem segura */
+  const goToPedidos = (screenName?: keyof PedidosStackParamList) => {
     onClose();
-    navigation.navigate(screenName as never);
+    if (screenName) {
+      navigation.navigate("PedidosStack", { screen: screenName });
+    } else {
+      navigation.navigate("PedidosStack");
+    }
   };
 
   return (
@@ -43,82 +53,122 @@ export function FabModal({ isVisible, onClose }: FabModalProps) {
         <View style={styles.modalContent}>
           <Text style={styles.mainTitle}>Novo</Text>
 
-          {/* Seção Pedido */}
+          {/* ===== Pedido ===== */}
           <Text style={styles.sectionTitle}>Pedido</Text>
+
           <View style={styles.cardRow}>
+            {/* Serviço */}
             <TouchableOpacity
               style={styles.cardButtonLeft}
-              onPress={() => handleOptionPress("NovoServico")}
+              onPress={() => goToPedidos("NewServico")}
+              activeOpacity={0.9}
             >
-              <BriefcaseBusiness size={24} color="#FF3B30" />
+              <View
+                style={[
+                  styles.iconCircle,
+                  { backgroundColor: "#F4781F", borderColor: "transparent" },
+                ]}
+              >
+                <BriefcaseBusiness size={22} color="#FFFFFF" />
+              </View>
               <Text style={styles.cardButtonText}>Serviço</Text>
             </TouchableOpacity>
+
+            {/* PDV */}
             <TouchableOpacity
               style={styles.cardButtonRight}
-              onPress={() => handleOptionPress("PDVRapida")}
+              onPress={() => goToPedidos("PDVRapida")}
+              activeOpacity={0.9}
             >
-              <ReceiptText size={24} color="#FF3B30" />
+              <View
+                style={[
+                  styles.iconCircle,
+                  { backgroundColor: "#F4781F", borderColor: "transparent" },
+                ]}
+              >
+                <ReceiptText size={22} color="#FFFFFF" />
+              </View>
               <View>
                 <Text style={styles.cardButtonText}>PDV</Text>
                 <Text style={styles.cardButtonSubText}>Venda Rápida</Text>
               </View>
             </TouchableOpacity>
           </View>
+
           <View style={styles.cardRow}>
+            {/* Venda */}
             <TouchableOpacity
               style={styles.cardButtonLeft}
-              onPress={() => handleOptionPress("NovoVenda")}
+              onPress={() => goToPedidos("NovoVenda")}
+              activeOpacity={0.9}
             >
-              <ShoppingCart size={24} color="#FF3B30" />
+              <View
+                style={[
+                  styles.iconCircle,
+                  { backgroundColor: "#F4781F", borderColor: "transparent" },
+                ]}
+              >
+                <ShoppingCart size={22} color="#FFFFFF" />
+              </View>
               <Text style={styles.cardButtonText}>Venda</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Seção Cadastro */}
+          {/* ===== Cadastro ===== */}
           <Text style={styles.sectionTitle}>Cadastro</Text>
+
           <View style={styles.gridRow}>
             <TouchableOpacity
               style={styles.gridItem}
-              onPress={() => handleOptionPress("CadastroReceita")}
+              onPress={() => goToPedidos("CadastroReceita")}
+              activeOpacity={0.9}
             >
               <View style={styles.iconCircle}>
-                <ClipboardPlus size={24} color="#F4781F" />
+                <ClipboardPlus size={22} color="#F4781F" />
               </View>
               <Text style={styles.gridItemText}>Receita</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.gridItem}
-              onPress={() => handleOptionPress("CadastroDespesa")}
+              onPress={() => goToNested(TAB_PEDIDOS, "CadastroDespesa")}
+              activeOpacity={0.9}
             >
               <View style={styles.iconCircle}>
-                <Landmark size={24} color="#F4781F" />
+                <Wallet size={22} color="#F4781F" />
               </View>
               <Text style={styles.gridItemText}>Despesa</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.gridItem}
-              onPress={() => handleOptionPress("CadastroAgenda")}
+              onPress={() => goToNested(TAB_PEDIDOS, "CadastroAgenda")}
+              activeOpacity={0.9}
             >
               <View style={styles.iconCircle}>
-                <CalendarDays size={24} color="#F4781F" />
+                <CalendarDays size={22} color="#F4781F" />
               </View>
               <Text style={styles.gridItemText}>Agenda</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.gridItem}
-              onPress={() => handleOptionPress("CadastroServico")}
+              onPress={() => goToNested(TAB_PEDIDOS, "CadastroServico")}
+              activeOpacity={0.9}
             >
               <View style={styles.iconCircle}>
-                <BriefcaseBusiness size={24} color="#F4781F" />
+                <BriefcaseBusiness size={22} color="#F4781F" />
               </View>
               <Text style={styles.gridItemText}>Serviço</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.gridItem}
-              onPress={() => handleOptionPress("CadastroProduto")}
+              onPress={() => goToNested(TAB_PEDIDOS, "CadastroProduto")}
+              activeOpacity={0.9}
             >
               <View style={styles.iconCircle}>
-                <Package size={24} color="#F4781F" />
+                <Package size={22} color="#F4781F" />
               </View>
               <Text style={styles.gridItemText}>Produto</Text>
             </TouchableOpacity>
