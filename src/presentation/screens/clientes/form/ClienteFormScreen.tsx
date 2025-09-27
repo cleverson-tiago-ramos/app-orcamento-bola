@@ -1,5 +1,5 @@
 //src/presentation/screens/clientes/form/ClienteFormScreen.tsx
-import React, { useMemo, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -8,59 +8,100 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  useColorScheme,
+  Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import type { PedidosStackParamList, Cliente } from "@/types/navigation";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import {
   X,
   UserRound,
-  MessageCircleMore,
   Phone,
   Mail,
   IdCard,
   StickyNote,
   PlusCircle,
+  Smartphone,
 } from "lucide-react-native";
 
 import { styles } from "./styles";
-import { COLORS } from "@/theme/colors";
+import { COLORS, SWITCH_COLORS } from "@/theme/colors";
 import { AddressSheet } from "@/presentation/components/form/address-sheet";
-import { maskCpfCnpj, maskPhoneBR } from "@/presentation/utils/masks";
+import { useClienteForm } from "./hook/useClienteForm";
+type Props = {
+  value: boolean;
+  onValueChange: (v: boolean) => void;
+};
 
-export function ClienteFormScreen() {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<PedidosStackParamList>>();
+export function BrandSwitch({ value, onValueChange }: Props) {
+  const scheme = useColorScheme();
+  const isDark = scheme === "dark";
 
-  const [nome, setNome] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [email, setEmail] = useState("");
-  const [doc, setDoc] = useState("");
-  const [obs, setObs] = useState("");
-
-  const [addrOpen, setAddrOpen] = useState(false);
-  const [cep, setCep] = useState("");
-  const [rua, setRua] = useState("");
-  const [numero, setNumero] = useState("");
-  const [bairro, setBairro] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [uf, setUf] = useState("");
-
-  const canSave = useMemo(() => nome.trim().length >= 2, [nome]);
-
-  const handleSave = () => {
-    if (!canSave) return;
-    const novoCliente: Cliente = {
-      id: Date.now().toString(),
-      nome: nome.trim(),
-      telefone: whatsapp || telefone,
-    };
-    navigation.navigate("NewServico", { cliente: novoCliente });
+  const trackColor = {
+    false: isDark ? SWITCH_COLORS.trackOffDark : SWITCH_COLORS.trackOffLight,
+    true: isDark ? SWITCH_COLORS.trackOnDark : SWITCH_COLORS.trackOnLight,
   };
+
+  // iOS também respeita thumbColor, mas no Android ele é essencial
+  const thumbColor = value
+    ? SWITCH_COLORS.thumbOn
+    : isDark
+    ? SWITCH_COLORS.thumbOffDark
+    : SWITCH_COLORS.thumbOffLight;
+
+  return (
+    <Switch
+      value={value}
+      onValueChange={onValueChange}
+      trackColor={trackColor}
+      thumbColor={thumbColor}
+      // iOS precisa dessa cor de fundo quando está OFF
+      ios_backgroundColor={trackColor.false}
+      // (opcional) melhora animação no Android
+      style={Platform.select({
+        android: { transform: [{ scaleX: 1.05 }, { scaleY: 1.05 }] },
+      })}
+    />
+  );
+}
+export function ClienteFormScreen() {
+  const {
+    navigation,
+    nome,
+    setNome,
+    celular,
+    whatsapp,
+    telefone,
+    email,
+    setEmail,
+    doc,
+    obs,
+    setObs,
+    addrOpen,
+    setAddrOpen,
+    cep,
+    setCep,
+    rua,
+    setRua,
+    numero,
+    setNumero,
+    bairro,
+    setBairro,
+    cidade,
+    setCidade,
+    uf,
+    setUf,
+    canSave,
+    handleSave,
+    handleCloseAddr,
+    usarCelularComoWhatsapp,
+    toggleUsarCelularComoWhatsapp,
+    handleCelularChange,
+    handleWhatsappChange,
+    handleTelefoneChange, // NOVA função
+    applyDoc,
+  } = useClienteForm();
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
@@ -71,6 +112,7 @@ export function ClienteFormScreen() {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Novo Cliente</Text>
       </View>
+
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -99,37 +141,80 @@ export function ClienteFormScreen() {
 
           {/* Celular */}
           <View style={styles.inputRow}>
-            <MaterialCommunityIcons
-              name="whatsapp"
+            <Smartphone
               size={20}
               color={COLORS.brand}
               style={styles.inputIcon}
             />
             <TextInput
-              placeholder="WhatsApp"
+              placeholder="Celular"
               placeholderTextColor={COLORS.placeholderTextColor}
               style={styles.input}
               keyboardType="phone-pad"
-              value={whatsapp}
-              onChangeText={(t) => setWhatsapp(maskPhoneBR(t))}
+              value={celular}
+              onChangeText={handleCelularChange}
               maxLength={15}
               returnKeyType="next"
             />
           </View>
 
+          {/* Checkbox WhatsApp */}
+          <View style={styles.checkboxRow}>
+            <View style={styles.checkboxContainer}>
+              <MaterialCommunityIcons
+                name="whatsapp"
+                size={20}
+                color={COLORS.brand}
+                style={styles.checkboxIcon}
+              />
+              <Text style={styles.checkboxLabel}>
+                Usar celular como WhatsApp
+              </Text>
+              <BrandSwitch
+                value={usarCelularComoWhatsapp}
+                onValueChange={toggleUsarCelularComoWhatsapp}
+              />
+            </View>
+          </View>
+
+          {/* WhatsApp (apenas se checkbox NÃO estiver marcado) */}
+          {!usarCelularComoWhatsapp && (
+            <View style={styles.inputRow}>
+              <MaterialCommunityIcons
+                name="whatsapp"
+                size={20}
+                color={COLORS.brand}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                placeholder="WhatsApp (diferente do celular)"
+                placeholderTextColor={COLORS.placeholderTextColor}
+                style={styles.input}
+                keyboardType="phone-pad"
+                value={whatsapp}
+                onChangeText={handleWhatsappChange}
+                maxLength={15}
+                returnKeyType="next"
+              />
+            </View>
+          )}
+
+          {/* Telefone Fixo */}
           <View style={styles.inputRow}>
             <Phone size={20} color={COLORS.brand} style={styles.inputIcon} />
             <TextInput
-              placeholder="Telefone"
+              placeholder="Telefone Fixo"
               placeholderTextColor={COLORS.placeholderTextColor}
               style={styles.input}
               keyboardType="phone-pad"
               value={telefone}
-              onChangeText={(t) => setTelefone(maskPhoneBR(t))}
+              onChangeText={handleTelefoneChange} // CORREÇÃO: usar a nova função
               maxLength={15}
               returnKeyType="next"
             />
           </View>
+
+          {/* Email */}
           <View style={styles.inputRow}>
             <Mail size={20} color={COLORS.brand} style={styles.inputIcon} />
             <TextInput
@@ -143,6 +228,8 @@ export function ClienteFormScreen() {
               returnKeyType="next"
             />
           </View>
+
+          {/* Botão Adicionar Endereço */}
           <TouchableOpacity
             style={styles.addAddrRow}
             onPress={() => setAddrOpen(true)}
@@ -151,6 +238,8 @@ export function ClienteFormScreen() {
             <PlusCircle size={18} color={COLORS.brand} />
             <Text style={styles.addAddrText}>Adicionar Endereço</Text>
           </TouchableOpacity>
+
+          {/* CPF/CNPJ */}
           <View style={[styles.inputRow, { marginTop: 18 }]}>
             <IdCard size={20} color={COLORS.brand} style={styles.inputIcon} />
             <TextInput
@@ -159,11 +248,13 @@ export function ClienteFormScreen() {
               style={styles.input}
               keyboardType="number-pad"
               value={doc}
-              onChangeText={(t) => setDoc(maskCpfCnpj(t))}
+              onChangeText={(t) => applyDoc(t)} // CORREÇÃO: usar a função do hook
               maxLength={18}
               returnKeyType="next"
             />
           </View>
+
+          {/* Observações */}
           <View style={styles.textAreaWrap}>
             <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
               <StickyNote
@@ -185,6 +276,7 @@ export function ClienteFormScreen() {
           </View>
         </ScrollView>
 
+        {/* Footer com Botão Salvar */}
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.saveButton, !canSave && styles.saveDisabled]}
@@ -195,11 +287,11 @@ export function ClienteFormScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-      {/* Modal Endereço */}
 
+      {/* Modal Endereço */}
       <AddressSheet
         visible={addrOpen}
-        onClose={handleCloseAddr} // Use a função do hook
+        onClose={handleCloseAddr}
         values={{ cep, rua, numero, bairro, cidade, uf }}
         onChange={{ setCep, setRua, setNumero, setBairro, setCidade, setUf }}
       />

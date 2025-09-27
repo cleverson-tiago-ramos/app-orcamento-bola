@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { PedidosStackParamList, Cliente } from "@/types/navigation";
@@ -11,6 +11,8 @@ export function useClienteForm() {
   // campos
   const [nome, setNome] = useState("");
   const [celular, setCelular] = useState("");
+  const [usarCelularComoWhatsapp, setUsarCelularComoWhatsapp] = useState(true);
+  const [whatsapp, setWhatsapp] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [doc, setDoc] = useState("");
@@ -25,34 +27,79 @@ export function useClienteForm() {
   const [cidade, setCidade] = useState("");
   const [uf, setUf] = useState("");
 
+  // Efeito para sincronizar celular com whatsapp quando checkbox estiver marcado
+  useEffect(() => {
+    if (usarCelularComoWhatsapp) {
+      setWhatsapp(celular);
+    }
+  }, [celular, usarCelularComoWhatsapp]);
+
+  // Efeito para limpar whatsapp quando desmarcar o checkbox
+  useEffect(() => {
+    if (!usarCelularComoWhatsapp) {
+      setWhatsapp("");
+    }
+  }, [usarCelularComoWhatsapp]);
+
   const canSave = useMemo(() => nome.trim().length >= 2, [nome]);
 
   const handleSave = () => {
     if (!canSave) return;
+
+    // CORREÇÃO: Verificar se a string está vazia após o trim
     const novoCliente: Cliente = {
       id: Date.now().toString(),
       nome: nome.trim(),
-      telefone: celular || telefone,
-      email: email.trim() || undefined,
-      documento: doc.trim() || undefined,
-      observacoes: obs.trim() || undefined,
-      endereco: cep
-        ? {
-            cep,
-            logradouro: rua,
-            numero,
-            bairro,
-            cidade,
-            uf,
-          }
-        : undefined,
+      celular: celular.trim() !== "" ? celular.trim() : undefined,
+      whatsapp: whatsapp.trim() !== "" ? whatsapp.trim() : undefined,
+      telefone: telefone.trim() !== "" ? telefone.trim() : undefined,
+      email: email.trim() !== "" ? email.trim() : undefined,
+      documento: doc.trim() !== "" ? doc.trim() : undefined,
+      observacoes: obs.trim() !== "" ? obs.trim() : undefined,
+      endereco:
+        cep.trim() !== ""
+          ? {
+              cep: cep.trim(),
+              logradouro: rua.trim(),
+              numero: numero.trim(),
+              bairro: bairro.trim(),
+              cidade: cidade.trim(),
+              uf: uf.trim(),
+            }
+          : undefined,
     };
+
     navigation.navigate("NewServico", { cliente: novoCliente });
   };
 
   // Limpar endereço quando modal fechar
   const handleCloseAddr = () => {
     setAddrOpen(false);
+  };
+
+  // Função para manipular mudança no celular
+  const handleCelularChange = (text: string) => {
+    const formatted = maskPhoneBR(text);
+    setCelular(formatted);
+  };
+
+  // Função para manipular mudança no whatsapp (apenas quando checkbox desmarcado)
+  const handleWhatsappChange = (text: string) => {
+    if (!usarCelularComoWhatsapp) {
+      const formatted = maskPhoneBR(text);
+      setWhatsapp(formatted);
+    }
+  };
+
+  // Função para manipular mudança no telefone fixo
+  const handleTelefoneChange = (text: string) => {
+    const formatted = maskPhoneBR(text);
+    setTelefone(formatted);
+  };
+
+  // Função para alternar o checkbox
+  const toggleUsarCelularComoWhatsapp = () => {
+    setUsarCelularComoWhatsapp(!usarCelularComoWhatsapp);
   };
 
   return {
@@ -63,16 +110,14 @@ export function useClienteForm() {
     nome,
     setNome,
     celular,
-    setCelular,
+    whatsapp,
     telefone,
-    setTelefone,
     email,
     setEmail,
     doc,
-    setDoc,
     obs,
     setObs,
-
+    usarCelularComoWhatsapp,
     addrOpen,
     setAddrOpen,
     cep,
@@ -92,10 +137,12 @@ export function useClienteForm() {
     canSave,
     handleSave,
     handleCloseAddr,
+    handleCelularChange,
+    handleWhatsappChange,
+    handleTelefoneChange, // NOVA função
+    toggleUsarCelularComoWhatsapp,
 
-    // masks
-    applyPhone: (t: string) => setCelular(maskPhoneBR(t)),
-    applyTel: (t: string) => setTelefone(maskPhoneBR(t)),
+    // masks (mantido para compatibilidade)
     applyDoc: (t: string) => setDoc(maskCpfCnpj(t)),
   };
 }

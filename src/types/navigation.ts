@@ -1,11 +1,24 @@
 // src/types/navigation.ts
 import { NavigatorScreenParams } from "@react-navigation/native";
 
-export type Cliente = {
+export interface Cliente {
   id: string;
   nome: string;
+  celular?: string;
+  whatsapp?: string;
   telefone?: string;
-};
+  email?: string;
+  documento?: string;
+  observacoes?: string;
+  endereco?: {
+    cep: string;
+    logradouro: string;
+    numero: string;
+    bairro: string;
+    cidade: string;
+    uf: string;
+  };
+}
 
 export type PedidosStackParamList = {
   PedidosList: undefined;
