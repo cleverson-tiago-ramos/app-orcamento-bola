@@ -1,4 +1,3 @@
-// src/presentation/screens/clientes/form/ClienteFormScreen.tsx
 import React, { useMemo, useState } from "react";
 import {
   View,
@@ -13,7 +12,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { PedidosStackParamList, Cliente } from "@/types/navigation";
-import { X, PlusCircle } from "lucide-react-native";
+// ✅ Expo (recomendado)
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
+import {
+  X,
+  UserRound,
+  MessageCircleMore,
+  Phone,
+  Mail,
+  IdCard,
+  StickyNote,
+  PlusCircle,
+} from "lucide-react-native";
 
 import { styles } from "./styles";
 import { COLORS } from "@/theme/colors";
@@ -26,7 +37,7 @@ export function ClienteFormScreen() {
 
   // form state
   const [nome, setNome] = useState("");
-  const [celular, setCelular] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [doc, setDoc] = useState("");
@@ -48,9 +59,8 @@ export function ClienteFormScreen() {
     const novoCliente: Cliente = {
       id: Date.now().toString(),
       nome: nome.trim(),
-      telefone: celular || telefone,
+      telefone: whatsapp || telefone,
     };
-    // volta pra NewServico com o cliente escolhido
     navigation.navigate("NewServico", { cliente: novoCliente });
   };
 
@@ -74,6 +84,11 @@ export function ClienteFormScreen() {
         >
           {/* Nome */}
           <View style={styles.inputRow}>
+            <UserRound
+              size={20}
+              color={COLORS.brand}
+              style={styles.inputIcon}
+            />
             <TextInput
               placeholder="Nome"
               placeholderTextColor={COLORS.placeholderTextColor}
@@ -84,23 +99,28 @@ export function ClienteFormScreen() {
               returnKeyType="next"
             />
           </View>
-
-          {/* Celular */}
+          {/* WhatsApp */}
           <View style={styles.inputRow}>
+            <MaterialCommunityIcons
+              name="whatsapp"
+              size={20}
+              color={COLORS.brand}
+              style={styles.inputIcon}
+            />
             <TextInput
-              placeholder="Celular"
+              placeholder="WhatsApp"
               placeholderTextColor={COLORS.placeholderTextColor}
               style={styles.input}
               keyboardType="phone-pad"
-              value={celular}
-              onChangeText={(t) => setCelular(maskPhoneBR(t))}
+              value={whatsapp}
+              onChangeText={(t) => setWhatsapp(maskPhoneBR(t))}
               maxLength={15}
               returnKeyType="next"
             />
           </View>
-
           {/* Telefone */}
           <View style={styles.inputRow}>
+            <Phone size={20} color={COLORS.brand} style={styles.inputIcon} />
             <TextInput
               placeholder="Telefone"
               placeholderTextColor={COLORS.placeholderTextColor}
@@ -112,9 +132,9 @@ export function ClienteFormScreen() {
               returnKeyType="next"
             />
           </View>
-
-          {/* Email */}
+          {/* E-mail */}
           <View style={styles.inputRow}>
+            <Mail size={20} color={COLORS.brand} style={styles.inputIcon} />
             <TextInput
               placeholder="E-mail"
               placeholderTextColor={COLORS.placeholderTextColor}
@@ -126,7 +146,6 @@ export function ClienteFormScreen() {
               returnKeyType="next"
             />
           </View>
-
           {/* Adicionar Endereço */}
           <TouchableOpacity
             style={styles.addAddrRow}
@@ -136,9 +155,9 @@ export function ClienteFormScreen() {
             <PlusCircle size={18} color={COLORS.brand} />
             <Text style={styles.addAddrText}>Adicionar Endereço</Text>
           </TouchableOpacity>
-
           {/* CPF/CNPJ */}
           <View style={[styles.inputRow, { marginTop: 18 }]}>
+            <IdCard size={20} color={COLORS.brand} style={styles.inputIcon} />
             <TextInput
               placeholder="CPF/CNPJ"
               placeholderTextColor={COLORS.placeholderTextColor}
@@ -150,19 +169,25 @@ export function ClienteFormScreen() {
               returnKeyType="next"
             />
           </View>
-
           {/* Observações */}
           <View style={styles.textAreaWrap}>
-            <TextInput
-              placeholder="Observações"
-              placeholderTextColor={COLORS.placeholderTextColor}
-              style={styles.textArea}
-              value={obs}
-              onChangeText={setObs}
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
+            <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+              <StickyNote
+                size={20}
+                color={COLORS.brand}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                placeholder="Observações"
+                placeholderTextColor={COLORS.placeholderTextColor}
+                style={[styles.textArea, { flex: 1 }]}
+                value={obs}
+                onChangeText={setObs}
+                multiline
+                numberOfLines={4}
+                textAlignVertical="top"
+              />
+            </View>
           </View>
         </ScrollView>
 
@@ -179,7 +204,7 @@ export function ClienteFormScreen() {
         </View>
       </KeyboardAvoidingView>
 
-      {/* Modal Endereço (componente reutilizável) */}
+      {/* Modal Endereço */}
       <AddressSheet
         visible={addrOpen}
         onClose={() => setAddrOpen(false)}

@@ -21,13 +21,19 @@ export const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.backgroundLight },
 
   inputRow: {
+    flexDirection: "row", // 👈 ícone + input
+    alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: COLORS.divider,
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: COLORS.surface,
   },
+  inputIcon: {
+    marginRight: 10,
+  },
   input: {
+    flex: 1, // 👈 ocupa o resto
     fontSize: 16,
     color: COLORS.text,
     paddingVertical: 8,
@@ -83,39 +89,5 @@ export const styles = StyleSheet.create({
     color: COLORS.backgroundLight,
     fontSize: 16,
     fontWeight: "700",
-  },
-
-  // ===== Modal endereço
-  addrOverlay: {
-    flex: 1,
-    backgroundColor: COLORS.overlay,
-    justifyContent: "flex-end",
-  },
-  addrSheet: {
-    backgroundColor: COLORS.surface,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    maxHeight: "85%",
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 18,
-  },
-  addrHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-    gap: 8,
-  },
-  addrTitle: { fontSize: 16, fontWeight: "700", color: COLORS.textDark },
-  addrRow: { marginTop: 10 },
-  addrInput: {
-    height: 44,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    backgroundColor: COLORS.surface,
-    fontSize: 16,
-    color: COLORS.text,
   },
 });
