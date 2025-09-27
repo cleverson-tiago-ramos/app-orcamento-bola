@@ -1,4 +1,4 @@
-//src/presentation/screens/clientes/form/ClienteFormScreen.tsx
+// src/presentation/screens/clientes/form/ClienteFormScreen.tsx
 import React from "react";
 import {
   View,
@@ -8,14 +8,10 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  useColorScheme,
-  Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-
 import {
-  X,
   UserRound,
   Phone,
   Mail,
@@ -26,60 +22,33 @@ import {
 } from "lucide-react-native";
 
 import { styles } from "./styles";
-import { COLORS, SWITCH_COLORS } from "@/theme/colors";
+import { COLORS } from "@/theme/colors";
 import { AddressSheet } from "@/presentation/components/form/address-sheet";
+import { BrandSwitch } from "@/presentation/components/brand-switch/BrandSwitch";
+import { HeaderBack } from "@/presentation/components/header/HeaderBack";
+import { FormRow } from "@/presentation/components/form/form-row/FormRow";
 import { useClienteForm } from "./hook/useClienteForm";
-type Props = {
-  value: boolean;
-  onValueChange: (v: boolean) => void;
-};
 
-export function BrandSwitch({ value, onValueChange }: Props) {
-  const scheme = useColorScheme();
-  const isDark = scheme === "dark";
-
-  const trackColor = {
-    false: isDark ? SWITCH_COLORS.trackOffDark : SWITCH_COLORS.trackOffLight,
-    true: isDark ? SWITCH_COLORS.trackOnDark : SWITCH_COLORS.trackOnLight,
-  };
-
-  // iOS também respeita thumbColor, mas no Android ele é essencial
-  const thumbColor = value
-    ? SWITCH_COLORS.thumbOn
-    : isDark
-    ? SWITCH_COLORS.thumbOffDark
-    : SWITCH_COLORS.thumbOffLight;
-
-  return (
-    <Switch
-      value={value}
-      onValueChange={onValueChange}
-      trackColor={trackColor}
-      thumbColor={thumbColor}
-      // iOS precisa dessa cor de fundo quando está OFF
-      ios_backgroundColor={trackColor.false}
-      // (opcional) melhora animação no Android
-      style={Platform.select({
-        android: { transform: [{ scaleX: 1.05 }, { scaleY: 1.05 }] },
-      })}
-    />
-  );
-}
 export function ClienteFormScreen() {
   const {
     navigation,
     nome,
     setNome,
     celular,
+    handleCelularChange,
     whatsapp,
+    handleWhatsappChange,
     telefone,
+    handleTelefoneChange,
     email,
     setEmail,
     doc,
+    applyDoc,
     obs,
     setObs,
     addrOpen,
     setAddrOpen,
+    handleCloseAddr,
     cep,
     setCep,
     rua,
@@ -92,26 +61,15 @@ export function ClienteFormScreen() {
     setCidade,
     uf,
     setUf,
-    canSave,
-    handleSave,
-    handleCloseAddr,
     usarCelularComoWhatsapp,
     toggleUsarCelularComoWhatsapp,
-    handleCelularChange,
-    handleWhatsappChange,
-    handleTelefoneChange, // NOVA função
-    applyDoc,
+    canSave,
+    handleSave,
   } = useClienteForm();
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <X color={COLORS.brand} size={28} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Novo Cliente</Text>
-      </View>
+      <HeaderBack title="Novo Cliente" onBack={() => navigation.goBack()} />
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -121,44 +79,29 @@ export function ClienteFormScreen() {
           style={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Nome */}
-          <View style={styles.inputRow}>
-            <UserRound
-              size={20}
-              color={COLORS.brand}
-              style={styles.inputIcon}
-            />
-            <TextInput
-              placeholder="Nome"
-              placeholderTextColor={COLORS.placeholderTextColor}
-              style={styles.input}
-              value={nome}
-              onChangeText={setNome}
-              autoCapitalize="words"
-              returnKeyType="next"
-            />
-          </View>
+          <FormRow
+            Icon={UserRound}
+            inputProps={{
+              placeholder: "Nome",
+              autoCapitalize: "words",
+              returnKeyType: "next",
+              value: nome,
+              onChangeText: setNome,
+            }}
+          />
 
-          {/* Celular */}
-          <View style={styles.inputRow}>
-            <Smartphone
-              size={20}
-              color={COLORS.brand}
-              style={styles.inputIcon}
-            />
-            <TextInput
-              placeholder="Celular"
-              placeholderTextColor={COLORS.placeholderTextColor}
-              style={styles.input}
-              keyboardType="phone-pad"
-              value={celular}
-              onChangeText={handleCelularChange}
-              maxLength={15}
-              returnKeyType="next"
-            />
-          </View>
+          <FormRow
+            Icon={Smartphone}
+            inputProps={{
+              placeholder: "Celular",
+              keyboardType: "phone-pad",
+              maxLength: 15,
+              returnKeyType: "next",
+              value: celular,
+              onChangeText: handleCelularChange,
+            }}
+          />
 
-          {/* Checkbox WhatsApp */}
           <View style={styles.checkboxRow}>
             <View style={styles.checkboxContainer}>
               <MaterialCommunityIcons
@@ -177,59 +120,44 @@ export function ClienteFormScreen() {
             </View>
           </View>
 
-          {/* WhatsApp (apenas se checkbox NÃO estiver marcado) */}
           {!usarCelularComoWhatsapp && (
-            <View style={styles.inputRow}>
-              <MaterialCommunityIcons
-                name="whatsapp"
-                size={20}
-                color={COLORS.brand}
-                style={styles.inputIcon}
-              />
-              <TextInput
-                placeholder="WhatsApp (diferente do celular)"
-                placeholderTextColor={COLORS.placeholderTextColor}
-                style={styles.input}
-                keyboardType="phone-pad"
-                value={whatsapp}
-                onChangeText={handleWhatsappChange}
-                maxLength={15}
-                returnKeyType="next"
-              />
-            </View>
+            <FormRow
+              Icon={MaterialCommunityIcons as any}
+              inputProps={{
+                placeholder: "WhatsApp (diferente do celular)",
+                keyboardType: "phone-pad",
+                maxLength: 15,
+                returnKeyType: "next",
+                value: whatsapp,
+                onChangeText: handleWhatsappChange,
+              }}
+            />
           )}
 
-          {/* Telefone Fixo */}
-          <View style={styles.inputRow}>
-            <Phone size={20} color={COLORS.brand} style={styles.inputIcon} />
-            <TextInput
-              placeholder="Telefone Fixo"
-              placeholderTextColor={COLORS.placeholderTextColor}
-              style={styles.input}
-              keyboardType="phone-pad"
-              value={telefone}
-              onChangeText={handleTelefoneChange} // CORREÇÃO: usar a nova função
-              maxLength={15}
-              returnKeyType="next"
-            />
-          </View>
+          <FormRow
+            Icon={Phone}
+            inputProps={{
+              placeholder: "Telefone Fixo",
+              keyboardType: "phone-pad",
+              maxLength: 15,
+              returnKeyType: "next",
+              value: telefone,
+              onChangeText: handleTelefoneChange,
+            }}
+          />
 
-          {/* Email */}
-          <View style={styles.inputRow}>
-            <Mail size={20} color={COLORS.brand} style={styles.inputIcon} />
-            <TextInput
-              placeholder="E-mail"
-              placeholderTextColor={COLORS.placeholderTextColor}
-              style={styles.input}
-              keyboardType="email-address"
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              returnKeyType="next"
-            />
-          </View>
+          <FormRow
+            Icon={Mail}
+            inputProps={{
+              placeholder: "E-mail",
+              keyboardType: "email-address",
+              autoCapitalize: "none",
+              returnKeyType: "next",
+              value: email,
+              onChangeText: setEmail,
+            }}
+          />
 
-          {/* Botão Adicionar Endereço */}
           <TouchableOpacity
             style={styles.addAddrRow}
             onPress={() => setAddrOpen(true)}
@@ -239,22 +167,19 @@ export function ClienteFormScreen() {
             <Text style={styles.addAddrText}>Adicionar Endereço</Text>
           </TouchableOpacity>
 
-          {/* CPF/CNPJ */}
-          <View style={[styles.inputRow, { marginTop: 18 }]}>
-            <IdCard size={20} color={COLORS.brand} style={styles.inputIcon} />
-            <TextInput
-              placeholder="CPF/CNPJ"
-              placeholderTextColor={COLORS.placeholderTextColor}
-              style={styles.input}
-              keyboardType="number-pad"
-              value={doc}
-              onChangeText={(t) => applyDoc(t)} // CORREÇÃO: usar a função do hook
-              maxLength={18}
-              returnKeyType="next"
-            />
-          </View>
+          <FormRow
+            Icon={IdCard}
+            inputProps={{
+              placeholder: "CPF/CNPJ",
+              keyboardType: "number-pad",
+              maxLength: 18,
+              returnKeyType: "next",
+              value: doc,
+              onChangeText: applyDoc,
+            }}
+          />
 
-          {/* Observações */}
+          {/* Observações (multilinha mantém o bloco atual) */}
           <View style={styles.textAreaWrap}>
             <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
               <StickyNote
@@ -276,7 +201,6 @@ export function ClienteFormScreen() {
           </View>
         </ScrollView>
 
-        {/* Footer com Botão Salvar */}
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.saveButton, !canSave && styles.saveDisabled]}
@@ -288,7 +212,6 @@ export function ClienteFormScreen() {
         </View>
       </KeyboardAvoidingView>
 
-      {/* Modal Endereço */}
       <AddressSheet
         visible={addrOpen}
         onClose={handleCloseAddr}
