@@ -10,9 +10,10 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { PedidosStackParamList, Cliente } from "@/types/navigation";
-import { ChevronLeft, Plus, UserRound } from "lucide-react-native";
+import { ChevronLeft, Plus, UserRound, Search } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { styles } from "./styles";
+import { COLORS } from "@/theme/colors";
 
 const MOCK_CLIENTES: Cliente[] = []; // comece vazio como no print
 
@@ -38,9 +39,8 @@ export function ClientesListScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#FFF" }}>
-      {/* Header com degradê */}
       <LinearGradient
-        colors={["#0B7FA6", "#2DA58C"]}
+        colors={[COLORS.brandLight, COLORS.brand]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={styles.header}
@@ -54,26 +54,27 @@ export function ClientesListScreen() {
         <Text style={styles.headerTitle}>Clientes</Text>
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.headerIconCircle}>
-            <UserRound color="#2C3E50" size={18} />
+            <UserRound color="#F4781F" size={18} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.headerIconCircle, { marginLeft: 10 }]}
             onPress={() => navigation.navigate("ClienteForm" as never)}
           >
-            <Plus color="#2C3E50" size={18} />
+            <Plus color="#F4781F" size={18} />
           </TouchableOpacity>
         </View>
       </LinearGradient>
 
       {/* Busca */}
-      <View style={{ paddingHorizontal: 16, marginTop: -18 }}>
+      <View style={{ paddingHorizontal: 16, marginTop: 10 }}>
         <TextInput
-          placeholder="Digite para buscar"
+          placeholder="Buscar Clientes"
           placeholderTextColor="#9A9A9A"
           value={query}
           onChangeText={setQuery}
           style={styles.searchInput}
         />
+        <Search />
       </View>
 
       {/* Lista / vazio */}
