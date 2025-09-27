@@ -1,7 +1,5 @@
+// src/presentation/components/date-field/styles.ts
 import { StyleSheet } from "react-native";
-
-const orangeColor = "#F4781F";
-const redColor = "#FF3B30";
 
 export const styles = StyleSheet.create({
   fieldRow: {

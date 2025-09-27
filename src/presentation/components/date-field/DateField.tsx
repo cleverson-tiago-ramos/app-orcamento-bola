@@ -11,16 +11,19 @@ import { Calendar as CalendarIcon } from "lucide-react-native";
 import {
   DatePickerModal,
   registerTranslation,
-  pt,
+  pt, // ✅ use 'pt' (algumas versões não exportam 'ptBR')
 } from "react-native-paper-dates";
 import { styles } from "./styles";
 
-// Se quiser usar o "Cancelar" padrão do pacote:
-registerTranslation("pt", pt);
-
-// OU, se quiser sobrescrever o texto do botão "Cancelar":
-// const ptCustom = { ...pt, cancel: "Fechar" }; // <-- troque aqui
-// registerTranslation("pt", ptCustom);
+/** ✅ Tradução pt + overrides dos rótulos para ficar como no print */
+const ptCustom = {
+  ...pt,
+  save: "OK",
+  cancel: "Cancelar",
+  close: "Cancelar",
+  label: "Selecione a data",
+};
+registerTranslation("pt", ptCustom);
 
 export type DateFieldProps = {
   label?: string;
@@ -35,12 +38,10 @@ export type DateFieldProps = {
   maximumDate?: Date;
 
   disabled?: boolean;
-
   locale?: "pt" | "en" | string;
 
   modalLabel?: string;
   okText?: string;
-  // closeText?: string; // <- removido, pois a lib não usa prop para isso
 };
 
 export function DateField({
@@ -100,10 +101,13 @@ export function DateField({
           setOpen(false);
         }}
         validRange={{ startDate: minimumDate, endDate: maximumDate }}
+        /** rótulos como no exemplo */
         label={modalLabel}
         saveLabel={okText}
+        /** garante estilo de “cartão” sobre a tela */
         presentationStyle="overFullScreen"
         animationType="fade"
+        uppercase={false}
       />
     </>
   );
