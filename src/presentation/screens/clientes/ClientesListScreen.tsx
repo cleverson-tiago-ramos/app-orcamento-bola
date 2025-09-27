@@ -9,6 +9,9 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import EmptyStateIllustration from "@/presentation/components/empty/EmptyStateIllustration";
+import { SearchBar } from "@/presentation/components/ui/SearchBar";
+
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { PedidosStackParamList, Cliente } from "@/types/navigation";
 import { ChevronLeft, Plus, UserRound, Search } from "lucide-react-native";
@@ -68,22 +71,23 @@ export function ClientesListScreen() {
 
       {/* Busca */}
       <View style={styles.searchWrapper}>
-        <TextInput
-          placeholder="Buscar Clientes"
-          placeholderTextColor="#9A9A9A"
+        <SearchBar
           value={query}
           onChangeText={setQuery}
-          style={[styles.searchInput, styles.searchInputWithIcon]}
-          returnKeyType="search"
+          placeholder="Buscar Clientes"
+          debounceMs={200}
+          containerStyle={{ marginHorizontal: 16, marginTop: 10 }}
         />
-        {/* ícone dentro do input */}
-        <Search size={20} color={COLORS.brand} style={styles.searchIcon} />
       </View>
 
       {/* Lista / vazio */}
       {data.length === 0 ? (
         <View style={styles.emptyWrap}>
-          <View style={styles.emptyIcon} />
+          <EmptyStateIllustration
+            size={90}
+            accent="#F4781F"
+            style={{ marginBottom: 12 }}
+          />
           <Text style={styles.emptyTitle}>Cadastro de Clientes</Text>
           <Text style={styles.emptySub}>
             Você ainda não tem clientes cadastrados

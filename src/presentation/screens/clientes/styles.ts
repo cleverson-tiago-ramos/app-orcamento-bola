@@ -47,15 +47,6 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  searchInput: {
-    height: 44,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#E6E6E6",
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 12,
-  },
-
   searchInputWithIcon: {
     paddingRight: 40,
   },
