@@ -12,7 +12,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { PedidosStackParamList, Cliente } from "@/types/navigation";
-// ✅ Expo (recomendado)
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import {
@@ -35,7 +34,6 @@ export function ClienteFormScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<PedidosStackParamList>>();
 
-  // form state
   const [nome, setNome] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [telefone, setTelefone] = useState("");
@@ -43,7 +41,6 @@ export function ClienteFormScreen() {
   const [doc, setDoc] = useState("");
   const [obs, setObs] = useState("");
 
-  // address modal
   const [addrOpen, setAddrOpen] = useState(false);
   const [cep, setCep] = useState("");
   const [rua, setRua] = useState("");
@@ -99,7 +96,8 @@ export function ClienteFormScreen() {
               returnKeyType="next"
             />
           </View>
-          {/* WhatsApp */}
+
+          {/* Celular */}
           <View style={styles.inputRow}>
             <MaterialCommunityIcons
               name="whatsapp"
@@ -118,7 +116,7 @@ export function ClienteFormScreen() {
               returnKeyType="next"
             />
           </View>
-          {/* Telefone */}
+
           <View style={styles.inputRow}>
             <Phone size={20} color={COLORS.brand} style={styles.inputIcon} />
             <TextInput
@@ -132,7 +130,6 @@ export function ClienteFormScreen() {
               returnKeyType="next"
             />
           </View>
-          {/* E-mail */}
           <View style={styles.inputRow}>
             <Mail size={20} color={COLORS.brand} style={styles.inputIcon} />
             <TextInput
@@ -146,7 +143,6 @@ export function ClienteFormScreen() {
               returnKeyType="next"
             />
           </View>
-          {/* Adicionar Endereço */}
           <TouchableOpacity
             style={styles.addAddrRow}
             onPress={() => setAddrOpen(true)}
@@ -155,7 +151,6 @@ export function ClienteFormScreen() {
             <PlusCircle size={18} color={COLORS.brand} />
             <Text style={styles.addAddrText}>Adicionar Endereço</Text>
           </TouchableOpacity>
-          {/* CPF/CNPJ */}
           <View style={[styles.inputRow, { marginTop: 18 }]}>
             <IdCard size={20} color={COLORS.brand} style={styles.inputIcon} />
             <TextInput
@@ -169,7 +164,6 @@ export function ClienteFormScreen() {
               returnKeyType="next"
             />
           </View>
-          {/* Observações */}
           <View style={styles.textAreaWrap}>
             <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
               <StickyNote
@@ -191,13 +185,11 @@ export function ClienteFormScreen() {
           </View>
         </ScrollView>
 
-        {/* Footer - Salvar */}
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.saveButton, !canSave && styles.saveDisabled]}
             onPress={handleSave}
             disabled={!canSave}
-            activeOpacity={0.9}
           >
             <Text style={styles.saveButtonText}>Salvar</Text>
           </TouchableOpacity>
